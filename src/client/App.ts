@@ -3,6 +3,7 @@ class App
 	private game: Game;
 	constructor()
 	{
+		this.initServiceWorker();
 		this.game = new Game( 'area' );
 	}
 

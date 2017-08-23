@@ -1,0 +1,15 @@
+{
+  "name": "pwa_sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {},
+  "scripts": {
+    "build": "npm run cbuild & npm run wbuild",
+    "cbuild": "tsc -p src/client",
+    "wbuild": "tsc -p src/sw",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hiroki",
+  "license": "ISC"
+}

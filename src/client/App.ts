@@ -4,7 +4,15 @@ class App
 	constructor()
 	{
 		this.initServiceWorker();
-		this.game = new Game( 'area' );
+		this.reset();
+	}
+
+	public reset()
+	{
+		const parent = (<HTMLElement>document.getElementById( 'area' ));
+		while( 0 < parent.children.length ) { parent.removeChild( parent.children[ 0 ] ); }
+
+		this.game = new Game( this, 'area' );
 	}
 
 	private initServiceWorker()
@@ -14,6 +22,8 @@ class App
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
 			console.log( 'Success registration:', registration );
+			if ( !registration.active ) { return; }
+			alert( 'Success registration: ver' + ( registration.active.scriptURL.split( '?' )[ 1 ] || '0' ) );
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
 				registration.sync.register( 'sync-test' ).then( () =>
 				{

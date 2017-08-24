@@ -4,11 +4,13 @@ class Game
 {
 	private area: HTMLElement;
 	private blocks: Blocks;
+	private reset: () => any;
 
-	constructor( area: string )
+	constructor( app: App, area: string )
 	{
 		this.area = <HTMLElement>document.getElementById( area );
 		this.blocks = new Blocks( this.area, 6, 6 );
+		this.reset = () => { app.reset(); };
 
 		this.checkOnline();
 
@@ -33,7 +35,13 @@ class Game
 	{
 		this.blocks.clearData();
 		
-		location.reload( this.checkOnline() );
+		if ( this.checkOnline() )
+		{
+			location.reload( true );
+		} else
+		{
+			this.reset();
+		}
 	}
 
 	private checkOnline()

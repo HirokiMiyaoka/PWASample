@@ -1,8 +1,15 @@
-const VERSION = '16';
+const VERSION = '17';
 class App {
     constructor() {
         this.initServiceWorker();
-        this.game = new Game('area');
+        this.reset();
+    }
+    reset() {
+        const parent = document.getElementById('area');
+        while (0 < parent.children.length) {
+            parent.removeChild(parent.children[0]);
+        }
+        this.game = new Game(this, 'area');
     }
     initServiceWorker() {
         if (!('serviceWorker' in navigator)) {
@@ -11,14 +18,19 @@ class App {
         navigator.serviceWorker.register('./sw.js?' + VERSION, { scope: './' });
         navigator.serviceWorker.ready.then((registration) => {
             console.log('Success registration:', registration);
+            if (!registration.active) {
+                return;
+            }
+            alert('Success registration: ver' + (registration.active.scriptURL.split('?')[1] || '0'));
         }).catch((error) => { console.log(error); });
     }
 }
 const COLOR_MAX = 4;
 class Game {
-    constructor(area) {
+    constructor(app, area) {
         this.area = document.getElementById(area);
         this.blocks = new Blocks(this.area, 6, 6);
+        this.reset = () => { app.reset(); };
         this.checkOnline();
         const startButton = document.getElementById('start');
         if (startButton) {
@@ -37,7 +49,12 @@ class Game {
     }
     refresh() {
         this.blocks.clearData();
-        location.reload(this.checkOnline());
+        if (this.checkOnline()) {
+            location.reload(true);
+        }
+        else {
+            this.reset();
+        }
     }
     checkOnline() {
         const online = navigator.onLine !== false;

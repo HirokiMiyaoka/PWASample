@@ -1,4 +1,4 @@
-const VERSION = '17';
+const VERSION = '18';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -19,6 +19,10 @@ class App {
         navigator.serviceWorker.ready.then((registration) => {
             console.log('Success registration:', registration);
             if (!registration.active) {
+                return;
+            }
+            const ver = registration.active.scriptURL.split('?')[1] || '_';
+            if (VERSION === ver) {
                 return;
             }
             alert('Success registration: ver' + VERSION);

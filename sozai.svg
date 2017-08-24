@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="-169.2177"
-     inkscape:cy="221.53031"
+     inkscape:zoom="1.4"
+     inkscape:cx="260.34051"
+     inkscape:cy="282.29671"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -36,7 +36,7 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:window-width="1342"
-     inkscape:window-height="660"
+     inkscape:window-height="795"
      inkscape:window-x="175"
      inkscape:window-y="71"
      inkscape:window-maximized="0"
@@ -78,7 +78,7 @@
     <rect
        inkscape:export-ydpi="54"
        inkscape:export-xdpi="54"
-       inkscape:export-filename="C:\Personal\github\ServiceWorkerSample\docs\icon-144.png"
+       inkscape:export-filename="docs\icon-144.png"
        y="492.36221"
        x="120"
        height="240"
@@ -133,5 +133,82 @@
        inkscape:export-ydpi="54"
        ry="8.999979"
        rx="8.999999" />
+    <rect
+       rx="14.000001"
+       ry="13.999969"
+       inkscape:export-ydpi="54"
+       inkscape:export-xdpi="54"
+       inkscape:export-filename="docs\img0.png"
+       y="792.36218"
+       x="0"
+       height="139.99997"
+       width="140"
+       id="rect4141"
+       style="fill:#fff0f5;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="fill:#f0f8ff;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4143"
+       width="140"
+       height="139.99997"
+       x="160"
+       y="792.36218"
+       inkscape:export-filename="docs\img1.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"
+       ry="13.999969"
+       rx="14.000001" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="8.8378906"
+       y="877.25476"
+       id="text4145"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4147"
+         x="8.8378906"
+         y="877.25476">Cache</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="229.85352"
+       y="851.60046"
+       id="text4145-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4147-3"
+         x="229.85352"
+         y="851.60046">No</tspan><tspan
+         sodipodi:role="line"
+         x="229.85352"
+         y="901.60046"
+         id="tspan4167">Cache</tspan></text>
+    <rect
+       rx="14.000001"
+       ry="13.999969"
+       inkscape:export-ydpi="54"
+       inkscape:export-xdpi="54"
+       inkscape:export-filename="docs\noimg.png"
+       y="792.36218"
+       x="320"
+       height="139.99997"
+       width="140"
+       id="rect4150"
+       style="fill:#f0fff0;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4152"
+       y="851.60046"
+       x="389.85352"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         y="851.60046"
+         x="389.85352"
+         id="tspan4154"
+         sodipodi:role="line">No</tspan><tspan
+         id="tspan4156"
+         y="901.60046"
+         x="389.85352"
+         sodipodi:role="line">Image</tspan></text>
   </g>
 </svg>

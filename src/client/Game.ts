@@ -28,7 +28,7 @@ class Game
 
 	public start()
 	{
-		this.blocks.start();
+		setTimeout( () => { this.blocks.start(); }, 500 );
 	}
 
 	public refresh()

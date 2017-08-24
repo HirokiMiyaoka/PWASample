@@ -1,4 +1,4 @@
-const VERSION = '21';
+const VERSION = '23';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -49,7 +49,7 @@ class Game {
         }
     }
     start() {
-        this.blocks.start();
+        setTimeout(() => { this.blocks.start(); }, 500);
     }
     refresh() {
         this.blocks.clearData();

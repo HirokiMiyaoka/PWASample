@@ -1,11 +1,14 @@
-const VERSION = '21';
+const VERSION = '23';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
+const NO_IMAGE = '/noimg.png';
 const CACHE_FILES = [
     BASE_PATH + '/',
     BASE_PATH + '/index.html',
     BASE_PATH + '/app.js',
+    BASE_PATH + '/img0.png',
+    BASE_PATH + NO_IMAGE,
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
@@ -38,7 +41,12 @@ self.addEventListener('fetch', (event) => {
             });
             return response;
         });
-    }).catch(() => { return fetch(event.request); }));
+    }).catch(() => { return fetch(event.request); }).catch((err) => {
+        if (!url.match(/\.png$/)) {
+            throw err;
+        }
+        return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME });
+    }));
 });
 function DefaultURL(url) { return url.split('?')[0]; }
 function AddCacheFiles() {

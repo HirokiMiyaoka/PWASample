@@ -1,4 +1,4 @@
-const VERSION = '26';
+const VERSION = '27';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -31,11 +31,11 @@ self.addEventListener('fetch', (event) => {
         caches.match(url, { cacheName: CACHE_NAME }).then((response) => {
             console.log('Cache hit:', response);
             caches.open(CACHE_NAME).then((cache) => {
-                cache.put(fetchRequest, cacheResponse);
             });
         });
         return response;
     }).catch((err) => {
+        console.log('fetch error:', err);
         console.log(url.match(/\.png$/));
         if (!url.match(/\.png$/)) {
             throw err;

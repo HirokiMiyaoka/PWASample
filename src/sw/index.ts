@@ -72,12 +72,13 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 			console.log( 'Cache hit:', response );
 			caches.open( CACHE_NAME ).then( ( cache ) =>
 			{
-				cache.put( fetchRequest/*event.request*/, cacheResponse );
+				//cache.put( fetchRequest/*event.request*/, cacheResponse );
 			} );
 		} );
 		return response;
 	} ).catch( ( err ) =>
 	{
+console.log('fetch error:',err);
 console.log(url.match( /\.png$/ ));
 		if ( !url.match( /\.png$/ ) ) { throw err; }
 console.log(BASE_URL + NO_IMAGE);

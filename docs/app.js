@@ -21,7 +21,7 @@ class App {
             if (!registration.active) {
                 return;
             }
-            alert('Success registration: ver' + (registration.active.scriptURL.split('?')[1] || '0'));
+            alert('Success registration: ver' + VERSION);
         }).catch((error) => { console.log(error); });
     }
 }

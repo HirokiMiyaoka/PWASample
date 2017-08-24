@@ -23,7 +23,7 @@ class App
 		{
 			console.log( 'Success registration:', registration );
 			if ( !registration.active ) { return; }
-			alert( 'Success registration: ver' + ( registration.active.scriptURL.split( '?' )[ 1 ] || '0' ) );
+			alert( 'Success registration: ver' + VERSION );
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
 				registration.sync.register( 'sync-test' ).then( () =>
 				{

@@ -1,4 +1,4 @@
-const VERSION = '23';
+const VERSION = '24';
 class App {
     constructor() {
         this.initServiceWorker();

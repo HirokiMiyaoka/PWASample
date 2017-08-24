@@ -1,7 +1,7 @@
-const VERSION = '15';
+const VERSION = '16';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
-const BASE_PATH = location.pathname.replace(/\/.*$/, '');
+const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
 const CACHE_FILES = [
     BASE_PATH + '/',
     BASE_PATH + '/index.html',

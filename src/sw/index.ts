@@ -25,7 +25,7 @@ interface ActivateEvent extends ExtendableEvent
 const CACHE_NAME = 'chache_ver_' + VERSION;
 
 const BASE_URL = location.href.replace( /\/[^\/]*$/, '' );
-const BASE_PATH = location.pathname.replace( /\/.*$/, '' );
+const BASE_PATH = location.pathname.replace( /\/[^\/]*$/, '' );
 const CACHE_FILES =
 [
 	BASE_PATH + '/',

@@ -30,7 +30,7 @@ class Game
 	public refresh()
 	{
 		this.blocks.clearData();
-		location.reload();
+		location.reload( navigator.onLine !== false );
 	}
 }
 

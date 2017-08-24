@@ -34,7 +34,7 @@ class Game {
     }
     refresh() {
         this.blocks.clearData();
-        location.reload();
+        location.reload(navigator.onLine !== false);
     }
 }
 class Blocks {

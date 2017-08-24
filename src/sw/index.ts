@@ -69,21 +69,25 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 		const cacheResponse = response.clone();
 		caches.match( url, { cacheName: CACHE_NAME } ).then( ( response ) =>
 		{
+			if ( !response ) { return; }
 			// Update cache.
 			console.log( 'Cache hit:', response );
 			caches.open( CACHE_NAME ).then( ( cache ) =>
 			{
-				//cache.put( fetchRequest/*event.request*/, cacheResponse );
+				cache.put( fetchRequest/*event.request*/, cacheResponse );
 			} );
 		} );
 		return response;
 	} ).catch( ( err ) =>
 	{
 console.log('fetch error:',err);
-console.log(url.match( /\.png$/ ));
 		if ( !url.match( /\.png$/ ) ) { throw err; }
 console.log(BASE_URL + NO_IMAGE);
-		return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } );
+		return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } ).then( ( r )=>
+		{
+			console.log('res:',r);
+return r;
+		} );
 	} );
 
 	/*event.respondWith(

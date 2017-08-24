@@ -10,7 +10,7 @@ class App
 	private initServiceWorker()
 	{
 		if ( !( 'serviceWorker' in navigator ) ) { return; }
-		navigator.serviceWorker.register( './sw.js'/*, {scope: '/example'}*/ );
+		navigator.serviceWorker.register( '/sw.js'/*, {scope: '/example'}*/ );
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {

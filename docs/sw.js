@@ -49,20 +49,6 @@ self.addEventListener('fetch', (event) => {
     }));
 });
 function DefaultURL(url) { return url.split('?')[0]; }
-function AddCache(request) {
-    console.log('AddCache:', request.url);
-    const fetchRequest = request.clone();
-    return fetch(fetchRequest, { credentials: 'include' }).then((response) => {
-        if (!response.ok) {
-            return response;
-        }
-        const cacheResponse = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-            cache.put(fetchRequest, cacheResponse);
-        });
-        return response;
-    });
-}
 function AddCacheFiles() {
     return caches.open(CACHE_NAME).then((cache) => {
         return cache.addAll(CACHE_FILES).catch((err) => { console.log('error', err); return; });

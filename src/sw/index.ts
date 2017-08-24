@@ -85,41 +85,9 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } );
 		} )
 	);
-
-	/*event.respondWith(
-		caches.match( url, { cacheName: CACHE_NAME } ).then( ( response ) =>
-		{
-			console.log( 'Cache hit:', response );
-			if ( response ) { return response; }
-
-			return AddCache( event.request );
-		} ).catch( () => { return fetch( event.request ); } ).catch( ( err ) =>
-		{
-console.log(url.match( /\.png$/ ));
-			if ( !url.match( /\.png$/ ) ) { throw err; }
-console.log(BASE_URL + NO_IMAGE);
-			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } );
-		} )
-	);*/
 } );
 
 function DefaultURL( url: string ){ return url.split( '?' )[ 0 ]; }
-
-function AddCache( request: Request )
-{
-console.log('AddCache:',request.url);
-	const fetchRequest = request.clone();
-	return fetch( fetchRequest, { credentials: 'include' } ).then( ( response ) =>
-	{
-		if ( !response.ok ) { return response; }
-		const cacheResponse = response.clone();
-		caches.open( CACHE_NAME ).then( ( cache ) =>
-		{
-			cache.put( fetchRequest/*event.request*/, cacheResponse );
-		} );
-		return response; 
-	} );
-}
 
 function AddCacheFiles()
 {

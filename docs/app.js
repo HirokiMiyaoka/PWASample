@@ -1,4 +1,4 @@
-const VERSION = '9';
+const VERSION = '10';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -10,6 +10,7 @@ class App {
         }
         navigator.serviceWorker.register('./sw.js?' + VERSION, { scope: './' });
         navigator.serviceWorker.ready.then((registration) => {
+            console.log('Success registration:', registration);
         }).catch((error) => { console.log(error); });
     }
 }

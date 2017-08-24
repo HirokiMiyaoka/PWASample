@@ -57,19 +57,21 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 
 function CacheFiles()
 {
-console.log(location);
+	// location: WorkerLocation
+	// Sample data { hash: "", host: "127.0.0.1:56979", hostname: "127.0.0.1",
+	// href:"http://127.0.0.1:56979/sw.js?10", origin: "http://127.0.0.1:56979",
+	// pathname: "/sw.js", port: "56979", protocol: "http:", search: "?10" }
 	return caches.open( CHACHE_NAME ).then( ( cache ) =>
 	{
 		const baseurl = location.href.replace( /\/[^\/]*$/, '/' );
 		return Promise.all( CACHE_FILES.map( ( filename ) =>
 		{
-			const url = baseurl + filename;
-console.log( url, filename );
+			const url = baseurl + filename + location.search;
 			return fetch( new Request( url ) ).then( ( response ) =>
 			{
 				if ( response.ok ) { return cache.put( response.url, response ); }
 				return Promise.reject( { error: 'Access error.', response: response } );
-			} ).catch( (err)=>{console.log(err);} );
+			} ).catch( ( err ) => { console.log(err); } );
 		} ) );
 	} );
 }

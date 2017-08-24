@@ -13,7 +13,7 @@ class App
 		navigator.serviceWorker.register( './sw.js?' + VERSION, {scope: './'} );
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
-
+			console.log( 'Success registration:', registration );
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
 				registration.sync.register( 'sync-test' ).then( () =>
 				{

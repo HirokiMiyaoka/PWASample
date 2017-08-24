@@ -1,4 +1,4 @@
-const VERSION = '9';
+const VERSION = '10';
 const CHACHE_NAME = 'chache_ver_' + VERSION;
 const CACHE_FILES = [
     'index.html',
@@ -19,12 +19,10 @@ self.addEventListener('fetch', (event) => {
     console.log('fetch', event);
 });
 function CacheFiles() {
-    console.log(location);
     return caches.open(CHACHE_NAME).then((cache) => {
         const baseurl = location.href.replace(/\/[^\/]*$/, '/');
         return Promise.all(CACHE_FILES.map((filename) => {
-            const url = baseurl + filename;
-            console.log(url, filename);
+            const url = baseurl + filename + location.search;
             return fetch(new Request(url)).then((response) => {
                 if (response.ok) {
                     return cache.put(response.url, response);

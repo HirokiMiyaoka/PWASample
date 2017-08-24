@@ -1,15 +1,19 @@
-const VERSION = '10';
-const CHACHE_NAME = 'chache_ver_' + VERSION;
+const VERSION = '15';
+const CACHE_NAME = 'chache_ver_' + VERSION;
+const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
+const BASE_PATH = location.pathname.replace(/\/.*$/, '');
 const CACHE_FILES = [
-    'index.html',
-    'app.js',
+    BASE_PATH + '/',
+    BASE_PATH + '/index.html',
+    BASE_PATH + '/app.js',
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
-    event.waitUntil(CacheFiles());
+    event.waitUntil(AddCacheFiles());
 });
 self.addEventListener('activate', (event) => {
     console.info('activate', event);
+    event.waitUntil(RemoveOldCache());
 });
 self.addEventListener('sync', (event) => {
     console.info('sync', event);
@@ -17,18 +21,23 @@ self.addEventListener('sync', (event) => {
 self.addEventListener('fetch', (event) => {
     console.log(navigator.onLine);
     console.log('fetch', event);
+    const url = DefaultURL(event.request.url);
+    if (CACHE_FILES.indexOf(url) < 0) {
+        return;
+    }
+    event.respondWith(caches.match(url, { cacheName: CACHE_NAME }).catch(() => { return fetch(event.request); }));
 });
-function CacheFiles() {
-    return caches.open(CHACHE_NAME).then((cache) => {
-        const baseurl = location.href.replace(/\/[^\/]*$/, '/');
-        return Promise.all(CACHE_FILES.map((filename) => {
-            const url = baseurl + filename + location.search;
-            return fetch(new Request(url)).then((response) => {
-                if (response.ok) {
-                    return cache.put(response.url, response);
-                }
-                return Promise.reject({ error: 'Access error.', response: response });
-            }).catch((err) => { console.log(err); });
+function DefaultURL(url) { return url.split('?')[0]; }
+function AddCacheFiles() {
+    return caches.open(CACHE_NAME).then((cache) => {
+        return cache.addAll(CACHE_FILES).catch((err) => { console.log('error', err); return; });
+    });
+}
+function RemoveOldCache() {
+    return caches.keys().then((keys) => {
+        return Promise.all(keys.map((cacheName) => {
+            console.log('Remove cache:', cacheName);
+            return cacheName !== CACHE_NAME ? caches.delete(cacheName) : Promise.resolve(true);
         }));
     });
 }

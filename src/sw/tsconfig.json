@@ -10,6 +10,7 @@
 		"sourceMap": false
 	},
 	"include": [
+		"../var.ts",
 		"./**/*.ts"
 	]
 }

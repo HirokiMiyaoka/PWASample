@@ -5,9 +5,10 @@
   "main": "index.js",
   "directories": {},
   "scripts": {
-    "build": "npm run cbuild & npm run wbuild",
+    "build": "npm run cbuild & npm run wbuild & npm run replace",
     "cbuild": "tsc -p src/client",
     "wbuild": "tsc -p src/sw",
+    "replace": "node script/replace.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hiroki",

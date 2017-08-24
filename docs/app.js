@@ -1,3 +1,4 @@
+const VERSION = '9';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -7,7 +8,7 @@ class App {
         if (!('serviceWorker' in navigator)) {
             return;
         }
-        navigator.serviceWorker.register('./sw.js', { scope: '/PWASample' });
+        navigator.serviceWorker.register('./sw.js?' + VERSION, { scope: './' });
         navigator.serviceWorker.ready.then((registration) => {
         }).catch((error) => { console.log(error); });
     }
@@ -17,6 +18,7 @@ class Game {
     constructor(area) {
         this.area = document.getElementById(area);
         this.blocks = new Blocks(this.area, 6, 6);
+        this.checkOnline();
         const startButton = document.getElementById('start');
         if (startButton) {
             startButton.addEventListener('click', () => { this.start(); }, false);
@@ -34,7 +36,17 @@ class Game {
     }
     refresh() {
         this.blocks.clearData();
-        location.reload(navigator.onLine !== false);
+        location.reload(this.checkOnline());
+    }
+    checkOnline() {
+        const online = navigator.onLine !== false;
+        if (online) {
+            document.body.classList.remove('offline');
+        }
+        else {
+            document.body.classList.add('offline');
+        }
+        return online;
     }
 }
 class Blocks {

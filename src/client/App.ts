@@ -10,9 +10,10 @@ class App
 	private initServiceWorker()
 	{
 		if ( !( 'serviceWorker' in navigator ) ) { return; }
-		navigator.serviceWorker.register( './sw.js', {scope: '/PWASample'} );
+		navigator.serviceWorker.register( './sw.js?' + VERSION, {scope: './'} );
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
+
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
 				registration.sync.register( 'sync-test' ).then( () =>
 				{

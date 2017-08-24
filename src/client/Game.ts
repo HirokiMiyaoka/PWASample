@@ -10,6 +10,8 @@ class Game
 		this.area = <HTMLElement>document.getElementById( area );
 		this.blocks = new Blocks( this.area, 6, 6 );
 
+		this.checkOnline();
+
 		const startButton = (<HTMLButtonElement>document.getElementById( 'start' ));
 		if ( startButton )
 		{
@@ -30,7 +32,21 @@ class Game
 	public refresh()
 	{
 		this.blocks.clearData();
-		location.reload( navigator.onLine !== false );
+		
+		location.reload( this.checkOnline() );
+	}
+
+	private checkOnline()
+	{
+		const online = navigator.onLine !== false;
+		if ( online )
+		{
+			document.body.classList.remove( 'offline' );
+		} else
+		{
+			document.body.classList.add( 'offline' );
+		}
+		return online;
 	}
 }
 

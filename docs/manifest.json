@@ -2,7 +2,7 @@
     "name": "PWA Sample",
     "short_name": "PWA Sample",
     "icons": [{"src": "./icon-144.png", "sizes": "144x144" }],
-    "start_url": "./index.html?27",
+    "start_url": "./index.html?28",
     "display": "standalone",
     "theme_color": "#333333"
 }

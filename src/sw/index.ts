@@ -65,6 +65,7 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 	const fetchRequest = event.request.clone();
 	return fetch( event.request ).then( ( response ) =>
 	{
+		if ( !response.ok ) { throw 'notfound'; }
 		const cacheResponse = response.clone();
 		caches.match( url, { cacheName: CACHE_NAME } ).then( ( response ) =>
 		{

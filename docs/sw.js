@@ -1,4 +1,4 @@
-const VERSION = '27';
+const VERSION = '28';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -27,6 +27,9 @@ self.addEventListener('fetch', (event) => {
     const url = DefaultURL(event.request.url);
     const fetchRequest = event.request.clone();
     return fetch(event.request).then((response) => {
+        if (!response.ok) {
+            throw 'notfound';
+        }
         const cacheResponse = response.clone();
         caches.match(url, { cacheName: CACHE_NAME }).then((response) => {
             console.log('Cache hit:', response);

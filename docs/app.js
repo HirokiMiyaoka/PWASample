@@ -7,7 +7,7 @@ class App {
         if (!('serviceWorker' in navigator)) {
             return;
         }
-        navigator.serviceWorker.register('/sw.js');
+        navigator.serviceWorker.register('./sw.js', { scope: '/PWASample' });
         navigator.serviceWorker.ready.then((registration) => {
         }).catch((error) => { console.log(error); });
     }

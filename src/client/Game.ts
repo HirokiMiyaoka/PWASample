@@ -34,14 +34,15 @@ class Game
 	public refresh()
 	{
 		this.blocks.clearData();
-		
-		if ( this.checkOnline() )
+
+		location.reload( this.checkOnline() );
+		/*if ( this.checkOnline() )
 		{
 			location.reload( true );
 		} else
 		{
 			this.reset();
-		}
+		}*/
 	}
 
 	private checkOnline()

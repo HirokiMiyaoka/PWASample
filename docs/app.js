@@ -1,4 +1,4 @@
-const VERSION = '18';
+const VERSION = '20';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -53,12 +53,7 @@ class Game {
     }
     refresh() {
         this.blocks.clearData();
-        if (this.checkOnline()) {
-            location.reload(true);
-        }
-        else {
-            this.reset();
-        }
+        location.reload(this.checkOnline());
     }
     checkOnline() {
         const online = navigator.onLine !== false;

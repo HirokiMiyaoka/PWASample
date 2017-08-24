@@ -39,7 +39,7 @@ self.addEventListener( 'install', ( event: InstallEvent ) =>
 {
 	console.info( 'install', event );
 	//event.waitUntil(self.skipWaiting());
-	event.waitUntil( AddCacheFiles() );
+	event.waitUntil( RemoveOldCache().then( () => { return AddCacheFiles(); } ) );
 } );
 
 self.addEventListener( 'activate', ( event: ActivateEvent ) =>
@@ -58,16 +58,26 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 	console.log( navigator.onLine );
 	console.log( 'fetch', event );
 	const url = DefaultURL( event.request.url );
-	if ( CACHE_FILES.indexOf( url ) < 0 ) { return; }
+
 	event.respondWith(
-		caches.match( url, { cacheName: CACHE_NAME } ).catch( () => { return fetch( event.request ); } )
+		caches.match( url, { cacheName: CACHE_NAME } ).then( ( response ) =>
+		{
+			console.log( 'Cache hit:', response );
+			if ( response ) { return response; }
+
+			const fetchRequest = event.request.clone();
+			return fetch( fetchRequest, { credentials: 'include' } ).then( ( response ) =>
+			{
+				if ( !response.ok ) { return response; }
+				const cacheResponse = response.clone();
+				caches.open( CACHE_NAME ).then( ( cache ) =>
+				{
+					cache.put( fetchRequest/*event.request*/, cacheResponse );
+				} );
+				return response; 
+			} );
+		} ).catch( () => { return fetch( event.request ); } )
 	);
-	// chache -[exists]-> return cache
-	//         `[not exists] -> fetch
-	// more...
-	// chache -[exists]-> return cache
-	//         `[not exists] -> fetch -[OK]-> cache & return response
-	//                                 `[NG]-> return error or return error response in cache(no image, ...)
 } );
 
 function DefaultURL( url: string ){ return url.split( '?' )[ 0 ]; }
@@ -78,15 +88,16 @@ function AddCacheFiles()
 	// Sample data { hash: "", host: "127.0.0.1:56979", hostname: "127.0.0.1",
 	// href:"http://127.0.0.1:56979/sw.js?10", origin: "http://127.0.0.1:56979",
 	// pathname: "/sw.js", port: "56979", protocol: "http:", search: "?10" }
+	console.log( 'AddCacheFiles:', CACHE_NAME );
 	return caches.open( CACHE_NAME ).then( ( cache ) =>
 	{
 		return cache.addAll( CACHE_FILES ).catch( ( err ) => { console.log( 'error', err ); return; } );
 		/*return Promise.all( CACHE_FILES.map( ( url ) =>
 		{
-			return fetch( new Request( url ) ).then( ( response ) =>
+			return fetch( new Request( BASE_URL + url ) ).then( ( response ) =>
 			{
-				if ( response.ok ) { return cache.put( DefaultURL( response.url ), response ); }
-				return Promise.reject( { error: 'Access error.', response: response } );
+				if ( !response.ok ) { throw new TypeError('Bad response status'); }
+				return cache.put( response.url, response );
 			} ).catch( ( err ) => { console.log(err); } );
 		} ) );*/
 	} );

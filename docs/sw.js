@@ -1,4 +1,4 @@
-const VERSION = '24';
+const VERSION = '25';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -30,25 +30,30 @@ self.addEventListener('fetch', (event) => {
         if (response) {
             return response;
         }
-        const fetchRequest = event.request.clone();
-        return fetch(fetchRequest, { credentials: 'include' }).then((response) => {
-            if (!response.ok) {
-                return response;
-            }
-            const cacheResponse = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-                cache.put(fetchRequest, cacheResponse);
-            });
-            return response;
-        });
+        return AddCache(event.request);
     }).catch(() => { return fetch(event.request); }).catch((err) => {
+        console.log(url.match(/\.png$/));
         if (!url.match(/\.png$/)) {
             throw err;
         }
+        console.log(BASE_URL + NO_IMAGE);
         return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME });
     }));
 });
 function DefaultURL(url) { return url.split('?')[0]; }
+function AddCache(request) {
+    const fetchRequest = request.clone();
+    return fetch(fetchRequest, { credentials: 'include' }).then((response) => {
+        if (!response.ok) {
+            return response;
+        }
+        const cacheResponse = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+            cache.put(fetchRequest, cacheResponse);
+        });
+        return response;
+    });
+}
 function AddCacheFiles() {
     return caches.open(CACHE_NAME).then((cache) => {
         return cache.addAll(CACHE_FILES).catch((err) => { console.log('error', err); return; });

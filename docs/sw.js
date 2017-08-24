@@ -1,4 +1,4 @@
-const VERSION = '29';
+const VERSION = '30';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -26,7 +26,7 @@ self.addEventListener('fetch', (event) => {
     console.log('fetch', event);
     const url = DefaultURL(event.request.url);
     const fetchRequest = event.request.clone();
-    return fetch(event.request).then((response) => {
+    return event.respondWith(fetch(event.request).then((response) => {
         if (!response.ok) {
             throw 'notfound';
         }
@@ -42,16 +42,11 @@ self.addEventListener('fetch', (event) => {
         });
         return response;
     }).catch((err) => {
-        console.log('fetch error:', err);
         if (!url.match(/\.png$/)) {
             throw err;
         }
-        console.log(BASE_URL + NO_IMAGE);
-        return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME }).then((r) => {
-            console.log('res:', r);
-            return r;
-        });
-    });
+        return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME });
+    }));
 });
 function DefaultURL(url) { return url.split('?')[0]; }
 function AddCache(request) {

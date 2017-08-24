@@ -39,7 +39,7 @@ self.addEventListener( 'install', ( event: InstallEvent ) =>
 {
 	console.info( 'install', event );
 	//event.waitUntil(self.skipWaiting());
-	event.waitUntil( RemoveOldCache().then( () => { return AddCacheFiles(); } ) );
+	event.waitUntil( AddCacheFiles() );
 } );
 
 self.addEventListener( 'activate', ( event: ActivateEvent ) =>
@@ -88,7 +88,6 @@ function AddCacheFiles()
 	// Sample data { hash: "", host: "127.0.0.1:56979", hostname: "127.0.0.1",
 	// href:"http://127.0.0.1:56979/sw.js?10", origin: "http://127.0.0.1:56979",
 	// pathname: "/sw.js", port: "56979", protocol: "http:", search: "?10" }
-	console.log( 'AddCacheFiles:', CACHE_NAME );
 	return caches.open( CACHE_NAME ).then( ( cache ) =>
 	{
 		return cache.addAll( CACHE_FILES ).catch( ( err ) => { console.log( 'error', err ); return; } );
@@ -109,7 +108,7 @@ function RemoveOldCache()
 	{
 		return Promise.all( keys.map( ( cacheName ) =>
 		{
-			console.log( 'Remove cache:', cacheName );
+			if ( cacheName !== CACHE_NAME ) { console.log( 'Remove cache:', cacheName ); }
 			return cacheName !== CACHE_NAME ? caches.delete( cacheName ) : Promise.resolve( true );
 		} ) );
 	} );

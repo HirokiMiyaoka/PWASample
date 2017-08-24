@@ -1,4 +1,4 @@
-const VERSION = '20';
+const VERSION = '21';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -9,7 +9,7 @@ const CACHE_FILES = [
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
-    event.waitUntil(RemoveOldCache().then(() => { return AddCacheFiles(); }));
+    event.waitUntil(AddCacheFiles());
 });
 self.addEventListener('activate', (event) => {
     console.info('activate', event);
@@ -42,7 +42,6 @@ self.addEventListener('fetch', (event) => {
 });
 function DefaultURL(url) { return url.split('?')[0]; }
 function AddCacheFiles() {
-    console.log('AddCacheFiles:', CACHE_NAME);
     return caches.open(CACHE_NAME).then((cache) => {
         return cache.addAll(CACHE_FILES).catch((err) => { console.log('error', err); return; });
     });
@@ -50,7 +49,9 @@ function AddCacheFiles() {
 function RemoveOldCache() {
     return caches.keys().then((keys) => {
         return Promise.all(keys.map((cacheName) => {
-            console.log('Remove cache:', cacheName);
+            if (cacheName !== CACHE_NAME) {
+                console.log('Remove cache:', cacheName);
+            }
             return cacheName !== CACHE_NAME ? caches.delete(cacheName) : Promise.resolve(true);
         }));
     });

@@ -4,5 +4,5 @@
     "icons": [{"src": "./icon-144.png", "sizes": "144x144" }],
     "start_url": "/index.html",
     "display": "standalone",
-    "theme_color": "#e91e63"
+    "theme_color": "#333333"
 }

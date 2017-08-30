@@ -135,7 +135,7 @@ self.addEventListener( 'notificationclick', ( event: NotificationEvent ) =>
 			const client = clientList[ i ];
 			if ( client.url == '/' && 'focus' in client ) { return (<any>client).focus(); }
 		}
-		if ( clients.openWindow ) { return clients.openWindow('/'); }
+		if ( clients.openWindow ) { return clients.openWindow('./'); }
 	} ) );
 }, false);
 

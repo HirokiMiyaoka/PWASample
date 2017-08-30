@@ -1,4 +1,4 @@
-const VERSION = '30';
+const VERSION = '31';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -18,6 +18,7 @@ class App {
         navigator.serviceWorker.register('./sw.js?' + VERSION, { scope: './' });
         navigator.serviceWorker.ready.then((registration) => {
             console.log('Success registration:', registration);
+            this.initPush(registration);
             if (!registration.active) {
                 return;
             }
@@ -27,6 +28,23 @@ class App {
             }
             alert('Success registration: ver' + VERSION);
         }).catch((error) => { console.log(error); });
+    }
+    initPush(registration) {
+        registration.pushManager.subscribe({ userVisibleOnly: true }).then((subscribed) => {
+            console.log('subscribed:', subscribed);
+            const endpoint = subscribed.endpoint.replace('https://android.googleapis.com/gcm/send/', '');
+            if (endpoint === subscribed.endpoint) {
+                return;
+            }
+            const input = document.getElementById('endpoint');
+            input.value = endpoint;
+            input.addEventListener('click', () => { this.copyText(); }, false);
+        });
+    }
+    copyText() {
+        const obj = document.getElementById('endpoint');
+        obj.select();
+        document.execCommand('copy');
     }
 }
 const COLOR_MAX = 4;

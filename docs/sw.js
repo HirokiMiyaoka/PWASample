@@ -1,4 +1,4 @@
-const VERSION = '30';
+const VERSION = '31';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -21,6 +21,18 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('sync', (event) => {
     console.info('sync', event);
 });
+self.addEventListener('push', (event) => {
+    console.log('push', event);
+    event.waitUntil(self.registration.showNotification('Push Received', {
+        body: 'Message',
+        icon: './icon-144.png',
+        tag: 'push-notification-tag',
+    }));
+});
+self.addEventListener('notificationclick', (event) => {
+    console.log('notificationclick', event);
+    event.notification.close();
+}, false);
 self.addEventListener('fetch', (event) => {
     console.log(navigator.onLine);
     console.log('fetch', event);
@@ -45,7 +57,10 @@ self.addEventListener('fetch', (event) => {
         if (!url.match(/\.png$/)) {
             throw err;
         }
-        return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME });
+        return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME }).then((data) => {
+            console.log(data);
+            return data;
+        });
     }));
 });
 function DefaultURL(url) { return url.split('?')[0]; }

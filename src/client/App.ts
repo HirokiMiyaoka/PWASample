@@ -22,6 +22,7 @@ class App
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
 			console.log( 'Success registration:', registration );
+			this.initPush( registration );
 			if ( !registration.active ) { return; }
 			const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
 			if ( VERSION === ver ) { return; }
@@ -33,5 +34,25 @@ class App
 				} ).catch( ( error ) => { console.log( error ); } );
 			}, false );*/
 		} ).catch( ( error ) => { console.log( error ); } );
+	}
+
+	private initPush( registration: ServiceWorkerRegistration )
+	{
+		registration.pushManager.subscribe( { userVisibleOnly: true } ).then( ( subscribed ) =>
+		{
+			console.log( 'subscribed:' , subscribed );
+			const endpoint = subscribed.endpoint.replace( 'https://android.googleapis.com/gcm/send/', '' );
+			if ( endpoint === subscribed.endpoint ) { return; }
+			const input = (<HTMLInputElement>document.getElementById( 'endpoint' ));
+			input.value = endpoint;
+			input.addEventListener( 'click', () => { this.copyText(); }, false );
+		} );
+	}
+
+	private copyText()
+	{
+		const obj = (<HTMLInputElement>document.getElementById( 'endpoint' ));
+		obj.select();
+		document.execCommand( 'copy' );
 	}
 }

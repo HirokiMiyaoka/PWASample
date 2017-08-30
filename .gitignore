@@ -58,3 +58,7 @@ typings/
 .env
 
 *.sublime-workspace
+
+*.bat
+
+tmp/

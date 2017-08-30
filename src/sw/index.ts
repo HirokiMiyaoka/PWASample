@@ -20,6 +20,25 @@ interface ActivateEvent extends ExtendableEvent
 {
 }
 
+interface NotificationEvent extends Event
+{
+	action: string;
+	notification: Notification;
+}
+
+interface PushMessageData
+{
+	arrayBuffer(): ArrayBuffer;
+	blob(): Blob;
+	json(): any;
+	text(): string;
+}
+
+interface PushEvent extends ExtendableEvent
+{
+	data: PushMessageData;
+}
+
 // Cache files.
 
 const CACHE_NAME = 'chache_ver_' + VERSION;
@@ -56,6 +75,25 @@ self.addEventListener( 'sync', ( event ) =>
 	console.info( 'sync', event );
 } );
 
+self.addEventListener('push', ( event: PushEvent ) =>
+{
+	console.log( 'push', event );
+	event.waitUntil(
+		(<any>self).registration.showNotification( 'Push Received',
+		{
+			body: 'Message',
+			icon: './icon-144.png',
+			tag: 'push-notification-tag',
+		} )
+	);
+} );
+
+self.addEventListener( 'notificationclick', ( event: NotificationEvent ) =>
+{
+	console.log( 'notificationclick', event );
+	event.notification.close();
+}, false);
+
 self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 {
 	console.log( navigator.onLine );
@@ -82,7 +120,11 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 		} ).catch( ( err ) =>
 		{
 			if ( !url.match( /\.png$/ ) ) { throw err; }
-			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } );
+			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } ).then( (data)=>
+			{
+console.log(data);
+				return data;
+			} );
 		} )
 	);
 } );

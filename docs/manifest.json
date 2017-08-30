@@ -2,8 +2,9 @@
     "name": "PWA Sample",
     "short_name": "PWA Sample",
     "icons": [{"src": "./icon-144.png", "sizes": "144x144" }],
-    "start_url": "./index.html?31",
+    "start_url": "./index.html?32",
     "display": "standalone",
     "theme_color": "#333333",
+    "orientation": "portrait",
     "gcm_sender_id": "499576333916"
 }

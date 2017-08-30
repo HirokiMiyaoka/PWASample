@@ -1,4 +1,4 @@
-const VERSION = '32';
+const VERSION = '33';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -32,6 +32,17 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
     console.log('notificationclick', event);
     event.notification.close();
+    event.waitUntil(clients.matchAll({ type: "window" }).then((clientList) => {
+        for (let i = 0; i < clientList.length; ++i) {
+            const client = clientList[i];
+            if (client.url == '/' && 'focus' in client) {
+                return client.focus();
+            }
+        }
+        if (clients.openWindow) {
+            return clients.openWindow('/');
+        }
+    }));
 }, false);
 self.addEventListener('fetch', (event) => {
     console.log(navigator.onLine);

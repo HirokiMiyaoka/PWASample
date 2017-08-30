@@ -20,7 +20,7 @@ interface ActivateEvent extends ExtendableEvent
 {
 }
 
-interface NotificationEvent extends Event
+interface NotificationEvent extends ExtendableEvent
 {
 	action: string;
 	notification: Notification;
@@ -38,6 +38,41 @@ interface PushEvent extends ExtendableEvent
 {
 	data: PushMessageData;
 }
+
+type ClientFrameType = "auxiliary" | "top-level" | "nested" | "none";
+type ClientMatchTypes = "window" | "worker" | "sharedworker" | "all";
+type WindowClientState = "hidden" | "visible" | "prerender" | "unloaded";
+
+interface ClientMatchOptions
+{
+	includeUncontrolled?: boolean;
+	type?: ClientMatchTypes;
+}
+
+interface WindowClient
+{
+	focused: boolean;
+	visibilityState: WindowClientState;
+	focus(): Promise<WindowClient>;
+	navigate(url: string): Promise<WindowClient>;
+}
+
+interface Client
+{
+	frameType: ClientFrameType;
+	id: string;
+	url: string;
+}
+
+interface Clients
+{
+	claim(): Promise<any>;
+	get(id: string): Promise<Client>;
+	matchAll(options?: ClientMatchOptions): Promise<Array<Client>>;
+	openWindow(url: string): Promise<WindowClient>;
+}
+
+declare var clients: Clients;
 
 // Cache files.
 
@@ -92,6 +127,16 @@ self.addEventListener( 'notificationclick', ( event: NotificationEvent ) =>
 {
 	console.log( 'notificationclick', event );
 	event.notification.close();
+
+	event.waitUntil( clients.matchAll( { type: "window" } ).then( ( clientList ) =>
+	{
+		for ( let i = 0; i < clientList.length; ++i )
+		{
+			const client = clientList[ i ];
+			if ( client.url == '/' && 'focus' in client ) { return (<any>client).focus(); }
+		}
+		if ( clients.openWindow ) { return clients.openWindow('/'); }
+	} ) );
 }, false);
 
 self.addEventListener( 'fetch', ( event: FetchEvent ) =>

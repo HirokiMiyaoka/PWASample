@@ -1,4 +1,4 @@
-const VERSION = '37';
+const VERSION = '38';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -26,9 +26,10 @@ class App {
             navigator.serviceWorker.addEventListener('message', (event) => {
                 console.log(event);
                 const ver = event.data || '';
-                if (VERSION === ver) {
+                if (VERSION === ver || VERSION === localStorage.getItem('VERSION')) {
                     return;
                 }
+                localStorage.setItem('VERSION', VERSION);
                 alert('Success registration: ver' + VERSION);
             }, false);
         }).catch((error) => { console.log(error); });
@@ -52,6 +53,10 @@ class App {
     }
     sendMessage(msg) {
         return new Promise((resolve, reject) => {
+            const sw = navigator.serviceWorker.controller;
+            if (!sw) {
+                return;
+            }
             const channel = new MessageChannel();
             channel.port1.addEventListener('message', (event) => {
                 if (event.data.error) {
@@ -61,7 +66,7 @@ class App {
                     resolve(event);
                 }
             }, false);
-            navigator.serviceWorker.controller.postMessage(msg, [channel.port2]);
+            sw.postMessage(msg, [channel.port2]);
         });
     }
 }

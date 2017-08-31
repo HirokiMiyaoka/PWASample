@@ -30,7 +30,8 @@ class App
 				console.log( event );
 				//const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
 				const ver = <string>event.data || '';
-				if ( VERSION === ver ) { /*registration.update();*/ return; }
+				if ( VERSION === ver || VERSION === localStorage.getItem( 'VERSION' ) ) { /*registration.update();*/ return; }
+				localStorage.setItem( 'VERSION', VERSION );
 				alert( 'Success registration: ver' + VERSION );
 			}, false );
 		} ).catch( ( error ) => { console.log( error ); } );
@@ -60,6 +61,9 @@ class App
 	{
 		return new Promise( ( resolve, reject ) =>
 		{
+			const sw = (<ServiceWorkerContainer>navigator.serviceWorker).controller;
+			if ( !sw ) { return; }
+
 			const channel = new MessageChannel();
 			channel.port1.addEventListener( 'message', ( event ) =>
 			{
@@ -71,7 +75,8 @@ class App
 					resolve( event );
 				}
 			}, false );
-			(<ServiceWorker>(<ServiceWorkerContainer>navigator.serviceWorker).controller).postMessage( msg, [ channel.port2 ] );
+
+			sw.postMessage( msg, [ channel.port2 ] );
 		} );
 	}
 }

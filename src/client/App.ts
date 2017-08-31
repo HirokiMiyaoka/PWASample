@@ -18,7 +18,7 @@ class App
 	private initServiceWorker()
 	{
 		if ( !( 'serviceWorker' in navigator ) ) { return; }
-		navigator.serviceWorker.register( './sw.js?' + VERSION, {scope: './'} );
+		navigator.serviceWorker.register( './sw.js', {scope: './'} );
 		navigator.serviceWorker.ready.then( ( registration ) =>
 		{
 			console.log( 'Success registration:', registration );

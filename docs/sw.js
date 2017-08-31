@@ -1,4 +1,4 @@
-const VERSION = '36';
+const VERSION = '37';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -12,13 +12,18 @@ const CACHE_FILES = [
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
-    localStorage.setItem('VERSION', VERSION);
     const p = [AddCacheFiles(), self.skipWaiting()];
     event.waitUntil(Promise.all(p));
 });
 self.addEventListener('activate', (event) => {
     console.info('activate', event);
     event.waitUntil(RemoveOldCache());
+});
+self.addEventListener('message', (event) => {
+    console.info('message', event);
+    event.waitUntil(clients.matchAll().then((client) => {
+        client[0].postMessage(VERSION);
+    }));
 });
 self.addEventListener('sync', (event) => {
     console.info('sync', event);
@@ -71,7 +76,7 @@ self.addEventListener('fetch', (event) => {
             throw err;
         }
         return caches.match(BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME }).then((data) => {
-            console.log(data);
+            console.log('Cache error:', data);
             return data;
         });
     }));

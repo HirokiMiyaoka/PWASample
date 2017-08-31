@@ -24,16 +24,15 @@ class App
 			console.log( 'Success registration:', registration );
 			this.initPush( registration );
 			if ( !registration.active ) { return; }
-			//const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
-			const ver = localStorage.getItem( 'VERSION' );
-			if ( VERSION === ver ) { /*registration.update();*/ return; }
-			alert( 'Success registration: ver' + VERSION );
-			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
-				registration.sync.register( 'sync-test' ).then( () =>
-				{
-					console.log('sync registerd');
-				} ).catch( ( error ) => { console.log( error ); } );
-			}, false );*/
+			this.sendMessage( { type: 'version' } );
+			navigator.serviceWorker.addEventListener( 'message', ( event ) =>
+			{
+				console.log( event );
+				//const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
+				const ver = <string>event.data || '';
+				if ( VERSION === ver ) { /*registration.update();*/ return; }
+				alert( 'Success registration: ver' + VERSION );
+			}, false );
 		} ).catch( ( error ) => { console.log( error ); } );
 	}
 
@@ -55,5 +54,24 @@ class App
 		const obj = (<HTMLInputElement>document.getElementById( 'endpoint' ));
 		obj.select();
 		document.execCommand( 'copy' );
+	}
+
+	private sendMessage( msg: any ): Promise<MessageEvent>
+	{
+		return new Promise( ( resolve, reject ) =>
+		{
+			const channel = new MessageChannel();
+			channel.port1.addEventListener( 'message', ( event ) =>
+			{
+				if ( event.data.error)
+				{
+					reject( event );
+				} else
+				{
+					resolve( event );
+				}
+			}, false );
+			(<ServiceWorker>(<ServiceWorkerContainer>navigator.serviceWorker).controller).postMessage( msg, [ channel.port2 ] );
+		} );
 	}
 }

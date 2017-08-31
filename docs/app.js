@@ -1,4 +1,4 @@
-const VERSION = '36';
+const VERSION = '37';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -22,11 +22,15 @@ class App {
             if (!registration.active) {
                 return;
             }
-            const ver = localStorage.getItem('VERSION');
-            if (VERSION === ver) {
-                return;
-            }
-            alert('Success registration: ver' + VERSION);
+            this.sendMessage({ type: 'version' });
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                console.log(event);
+                const ver = event.data || '';
+                if (VERSION === ver) {
+                    return;
+                }
+                alert('Success registration: ver' + VERSION);
+            }, false);
         }).catch((error) => { console.log(error); });
     }
     initPush(registration) {
@@ -45,6 +49,20 @@ class App {
         const obj = document.getElementById('endpoint');
         obj.select();
         document.execCommand('copy');
+    }
+    sendMessage(msg) {
+        return new Promise((resolve, reject) => {
+            const channel = new MessageChannel();
+            channel.port1.addEventListener('message', (event) => {
+                if (event.data.error) {
+                    reject(event);
+                }
+                else {
+                    resolve(event);
+                }
+            }, false);
+            navigator.serviceWorker.controller.postMessage(msg, [channel.port2]);
+        });
     }
 }
 const COLOR_MAX = 4;

@@ -62,6 +62,7 @@ interface Client
 	frameType: ClientFrameType;
 	id: string;
 	url: string;
+	postMessage( message: any ): void;
 }
 
 interface Clients
@@ -95,7 +96,6 @@ const CACHE_FILES =
 self.addEventListener( 'install', ( event: InstallEvent ) =>
 {
 	console.info( 'install', event );
-	localStorage.setItem( 'VERSION', VERSION );
 	const p = [ AddCacheFiles(), (<any>self).skipWaiting()];
 	event.waitUntil( Promise.all( p ) );
 } );
@@ -104,6 +104,15 @@ self.addEventListener( 'activate', ( event: ActivateEvent ) =>
 {
 	console.info( 'activate', event );
 	event.waitUntil( RemoveOldCache() );
+} );
+
+self.addEventListener( 'message', ( event: ExtendableEvent ) =>
+{
+	console.info( 'message', event );
+	event.waitUntil( clients.matchAll().then( ( client ) =>
+	{
+		client[ 0 ].postMessage( VERSION );
+	} ) );
 } );
 
 self.addEventListener( 'sync', ( event ) =>
@@ -168,7 +177,7 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 			if ( !url.match( /\.png$/ ) ) { throw err; }
 			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } ).then( (data)=>
 			{
-console.log(data);
+				console.log( 'Cache error:', data);
 				return data;
 			} );
 		} )

@@ -95,8 +95,9 @@ const CACHE_FILES =
 self.addEventListener( 'install', ( event: InstallEvent ) =>
 {
 	console.info( 'install', event );
-	//event.waitUntil(self.skipWaiting());
-	event.waitUntil( AddCacheFiles() );
+	localStorage.setItem( 'VERSION', VERSION );
+	const p = [ AddCacheFiles(), (<any>self).skipWaiting()];
+	event.waitUntil( Promise.all( p ) );
 } );
 
 self.addEventListener( 'activate', ( event: ActivateEvent ) =>

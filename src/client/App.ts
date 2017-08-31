@@ -24,8 +24,9 @@ class App
 			console.log( 'Success registration:', registration );
 			this.initPush( registration );
 			if ( !registration.active ) { return; }
-			const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
-			if ( VERSION === ver ) { return; }
+			//const ver = registration.active.scriptURL.split( '?' )[ 1 ] || '_';
+			const ver = localStorage.getItem( 'VERSION' );
+			if ( VERSION === ver ) { /*registration.update();*/ return; }
 			alert( 'Success registration: ver' + VERSION );
 			/*(<HTMLButtonElement>document.getElementById( 'button' )).addEventListener( 'click', () => {
 				registration.sync.register( 'sync-test' ).then( () =>

@@ -1,4 +1,4 @@
-const VERSION = '35';
+const VERSION = '36';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -22,7 +22,7 @@ class App {
             if (!registration.active) {
                 return;
             }
-            const ver = registration.active.scriptURL.split('?')[1] || '_';
+            const ver = localStorage.getItem('VERSION');
             if (VERSION === ver) {
                 return;
             }

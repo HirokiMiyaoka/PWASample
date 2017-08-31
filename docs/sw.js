@@ -1,4 +1,4 @@
-const VERSION = '35';
+const VERSION = '36';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -12,7 +12,9 @@ const CACHE_FILES = [
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
-    event.waitUntil(AddCacheFiles());
+    localStorage.setItem('VERSION', VERSION);
+    const p = [AddCacheFiles(), self.skipWaiting()];
+    event.waitUntil(Promise.all(p));
 });
 self.addEventListener('activate', (event) => {
     console.info('activate', event);

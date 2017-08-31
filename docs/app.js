@@ -1,4 +1,4 @@
-const VERSION = '38';
+const VERSION = '39';
 class App {
     constructor() {
         this.initServiceWorker();
@@ -18,13 +18,13 @@ class App {
         navigator.serviceWorker.register('./sw.js', { scope: './' });
         navigator.serviceWorker.ready.then((registration) => {
             console.log('Success registration:', registration);
+            document.getElementById('version').textContent = VERSION;
             this.initPush(registration);
             if (!registration.active) {
                 return;
             }
             this.sendMessage({ type: 'version' });
             navigator.serviceWorker.addEventListener('message', (event) => {
-                console.log(event);
                 const ver = event.data || '';
                 if (VERSION === ver || VERSION === localStorage.getItem('VERSION')) {
                     return;

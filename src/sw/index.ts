@@ -91,27 +91,39 @@ const CACHE_FILES =
 	BASE_PATH + NO_IMAGE,
 ];
 
-// Service worker
+// Service Worker
 
 self.addEventListener( 'install', ( event: InstallEvent ) =>
 {
 	console.info( 'install', event );
-	const p = [ AddCacheFiles(), (<any>self).skipWaiting()];
+
+	const p =
+	[
+		AddCacheFiles(),           // Add chache in CACHE_FILES.
+		(<any>self).skipWaiting(), // Update Service Worker now.
+	];
+
 	event.waitUntil( Promise.all( p ) );
 } );
 
 self.addEventListener( 'activate', ( event: ActivateEvent ) =>
 {
 	console.info( 'activate', event );
+
+	// Remove old version cache.
 	event.waitUntil( RemoveOldCache() );
 } );
 
-self.addEventListener( 'message', ( event: ExtendableEvent ) =>
+self.addEventListener( 'message', ( event: MessageEvent ) =>
 {
 	console.info( 'message', event );
-	event.waitUntil( clients.matchAll().then( ( client ) =>
+	(<any>event).waitUntil( clients.matchAll().then( ( client ) =>
 	{
-		client[ 0 ].postMessage( VERSION );
+		// Send message to client.
+		if ( event.data.type === 'version' )
+		{
+			client[ 0 ].postMessage( VERSION );
+		}
 	} ) );
 } );
 
@@ -136,8 +148,10 @@ self.addEventListener('push', ( event: PushEvent ) =>
 self.addEventListener( 'notificationclick', ( event: NotificationEvent ) =>
 {
 	console.log( 'notificationclick', event );
+	// Close notification popup.
 	event.notification.close();
 
+	// Start this app.
 	event.waitUntil( clients.matchAll( { type: "window" } ).then( ( clientList ) =>
 	{
 		for ( let i = 0; i < clientList.length; ++i )
@@ -151,15 +165,18 @@ self.addEventListener( 'notificationclick', ( event: NotificationEvent ) =>
 
 self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 {
-	console.log( navigator.onLine );
+	// Fech hook.
 	console.log( 'fetch', event );
+	console.log( 'Online:', navigator.onLine );
 	const url = DefaultURL( event.request.url );
 
 	const fetchRequest = event.request.clone();
 	return event.respondWith(
 		fetch( event.request ).then( ( response ) =>
 		{
+			// Fetch file.
 			if ( !response.ok ) { throw 'notfound'; }
+			// Check cache.
 			const cacheResponse = response.clone();
 			caches.match( url, { cacheName: CACHE_NAME } ).then( ( response ) =>
 			{
@@ -174,7 +191,9 @@ self.addEventListener( 'fetch', ( event: FetchEvent ) =>
 			return response;
 		} ).catch( ( err ) =>
 		{
+			// Fetch error.
 			if ( !url.match( /\.png$/ ) ) { throw err; }
+			// Fetch error & Image file ... return No image.
 			return caches.match( BASE_URL + NO_IMAGE, { cacheName: CACHE_NAME } ).then( (data)=>
 			{
 				console.log( 'Cache error:', data);
@@ -210,6 +229,7 @@ function RemoveOldCache()
 {
 	return caches.keys().then( ( keys: string[] ) =>
 	{
+		if ( keys.indexOf( CACHE_NAME ) < 0 ) { return Promise.resolve( false ); }
 		return Promise.all( keys.map( ( cacheName ) =>
 		{
 			if ( cacheName !== CACHE_NAME ) { console.log( 'Remove cache:', cacheName ); }

@@ -1,4 +1,4 @@
-const VERSION = '38';
+const VERSION = '39';
 const CACHE_NAME = 'chache_ver_' + VERSION;
 const BASE_URL = location.href.replace(/\/[^\/]*$/, '');
 const BASE_PATH = location.pathname.replace(/\/[^\/]*$/, '');
@@ -12,7 +12,10 @@ const CACHE_FILES = [
 ];
 self.addEventListener('install', (event) => {
     console.info('install', event);
-    const p = [AddCacheFiles(), self.skipWaiting()];
+    const p = [
+        AddCacheFiles(),
+        self.skipWaiting(),
+    ];
     event.waitUntil(Promise.all(p));
 });
 self.addEventListener('activate', (event) => {
@@ -22,7 +25,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('message', (event) => {
     console.info('message', event);
     event.waitUntil(clients.matchAll().then((client) => {
-        client[0].postMessage(VERSION);
+        if (event.data.type === 'version') {
+            client[0].postMessage(VERSION);
+        }
     }));
 });
 self.addEventListener('sync', (event) => {
@@ -52,8 +57,8 @@ self.addEventListener('notificationclick', (event) => {
     }));
 }, false);
 self.addEventListener('fetch', (event) => {
-    console.log(navigator.onLine);
     console.log('fetch', event);
+    console.log('Online:', navigator.onLine);
     const url = DefaultURL(event.request.url);
     const fetchRequest = event.request.clone();
     return event.respondWith(fetch(event.request).then((response) => {
@@ -89,6 +94,9 @@ function AddCacheFiles() {
 }
 function RemoveOldCache() {
     return caches.keys().then((keys) => {
+        if (keys.indexOf(CACHE_NAME) < 0) {
+            return Promise.resolve(false);
+        }
         return Promise.all(keys.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
                 console.log('Remove cache:', cacheName);
